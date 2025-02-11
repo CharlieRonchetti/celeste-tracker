@@ -2,7 +2,7 @@ const API_URL = import.meta.env.VITE_API_URL; // Uses env variable
 
 // Fetch all runs
 export async function getRuns() {
-  const response = await fetch(`${API_URL}/runs`);
+  const response = await fetch(`${API_URL}/api/runs`);
   if (!response.ok) throw new Error("Failed to fetch runs");
   return response.json();
 }
