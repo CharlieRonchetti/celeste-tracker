@@ -9,6 +9,7 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Navbar from "./components/Navbar";
 import { AuthProvider } from "./context/AuthContext.tsx";
+import { injectSpeedInsights } from '@vercel/speed-insights';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
@@ -26,3 +27,5 @@ createRoot(document.getElementById('root')!).render(
     </AuthProvider>
   </StrictMode>,
 )
+
+injectSpeedInsights()
