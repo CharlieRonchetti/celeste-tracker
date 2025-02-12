@@ -1,10 +1,19 @@
 import express from "express";
 import pool from "../config/db.js";
+import { authenticateUser } from "../middleware/authMiddleware";
+import { AuthenticatedRequest } from "../interfaces/AuthenticatedRequest.ts"
 
 const router = express.Router();
 
 // Get all runs
-router.get("/", async (req, res) => {
+// Protected route: Only logged-in users can fetch runs
+router.get("/", authenticateUser, async (req: AuthenticatedRequest, res) => {
+  if (!req.user) {
+    return res.status(401).json({ error: "Unauthorized" });
+  }
+
+  console.log("Authenticated")
+
   try {
     const result = await pool.query("SELECT * FROM test_users");
     res.json(result.rows);
@@ -17,6 +26,7 @@ router.get("/", async (req, res) => {
 // Add a new run
 router.post("/", async (req, res) => {
   const { user_id, category, time } = req.body;
+
   try {
     const result = await pool.query(
       "INSERT INTO runs (user_id, category, time) VALUES ($1, $2, $3) RETURNING *",

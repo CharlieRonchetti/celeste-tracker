@@ -1,9 +1,8 @@
 import { Link, useNavigate } from "react-router";
 import { useAuth } from '../context/AuthContext.tsx'
-import { doSignOut } from '../services/auth.ts'
 
 export default function Navbar() {
-  const { userLoggedIn } = useAuth()
+  const { userLoggedIn, signOut } = useAuth()
   const navigate = useNavigate()
 
   return (
@@ -19,7 +18,7 @@ export default function Navbar() {
             userLoggedIn
               ?
               <>
-                <button onClick={() => doSignOut().then(() => {navigate('/login')})} className="text-white mx-2">Logout</button>
+                <button onClick={() => signOut().then(() => {navigate('/login')})} className="text-white mx-2">Logout</button>
               </>
               :
               <>

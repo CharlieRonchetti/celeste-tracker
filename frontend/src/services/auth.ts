@@ -1,14 +1,28 @@
-import { firebaseAuth } from '../services/firebaseConfig.ts'
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth'
+import { supabase } from "./supabase.ts";
 
-export const doCreateUserWithEmailAndPassword = async (email: string, password: string) => {
-    return createUserWithEmailAndPassword(firebaseAuth, email, password);
+// Register
+export async function signUp(email: string, password: string) {
+  const { data, error } = await supabase.auth.signUp({ email, password });
+  if (error) throw new Error(error.message);
+  return data;
 }
 
-export const doSignInWithEmailAndPassword = async (email: string, password: string) => {
-    return signInWithEmailAndPassword(firebaseAuth, email, password);
+// Login
+export async function signIn(email: string, password: string) {
+  const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+  if (error) throw new Error(error.message);
+  return data;
 }
 
-export const doSignOut = () => {
-    return firebaseAuth.signOut();
+// Logout
+export async function signOut() {
+  const { error } = await supabase.auth.signOut();
+  if (error) throw new Error(error.message);
+}
+
+// Get current user
+export async function getUser() {
+  const { data, error } = await supabase.auth.getUser();
+  if (error) throw new Error(error.message);
+  return data.user;
 }

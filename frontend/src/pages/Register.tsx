@@ -1,8 +1,8 @@
-import { doCreateUserWithEmailAndPassword } from "../services/auth"
 import { useState } from 'react'
+import { useAuth } from '../context/AuthContext.tsx'
 
 export default function Register() {
-    //const { userLoggedIn } = useAuth()
+    const { signUp } = useAuth()
 
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
@@ -13,7 +13,7 @@ export default function Register() {
         e.preventDefault()
         if(!isRegistering) {
             setIsRegistering(true)
-            await doCreateUserWithEmailAndPassword(email, password)
+            await signUp(email, password)
         }
     }
 

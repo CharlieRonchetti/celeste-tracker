@@ -1,11 +1,9 @@
-import { doSignInWithEmailAndPassword } from "../services/auth"
 import { useState } from 'react'
-import { useAuth } from '../context/AuthContext.tsx'
 import { Navigate } from "react-router";
-
+import { useAuth } from '../context/AuthContext.tsx'
 
 export default function Login() {
-    const { userLoggedIn } = useAuth()
+    const { userLoggedIn, signIn } = useAuth()
 
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
@@ -17,7 +15,7 @@ export default function Login() {
         if(!isSigningIn) {
             setIsSigningIn(true)
             console.log("attempting to sign in")
-            await doSignInWithEmailAndPassword(email, password)
+            await signIn(email, password)
         }
     }
 
