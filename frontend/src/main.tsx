@@ -9,12 +9,13 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Navbar from "./components/Navbar";
 import { AuthProvider } from "./context/AuthContext.tsx";
-import { injectSpeedInsights } from '@vercel/speed-insights';
+import { SpeedInsights } from '@vercel/speed-insights/react';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <AuthProvider>
       <BrowserRouter>
+      <SpeedInsights />
         <Navbar />
         <Routes>
           <Route path="/" element={<Home />} />
@@ -27,5 +28,3 @@ createRoot(document.getElementById('root')!).render(
     </AuthProvider>
   </StrictMode>,
 )
-
-injectSpeedInsights()
