@@ -8,7 +8,7 @@ import Profile from "./pages/Profile";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Navbar from "./components/Navbar";
-import { AuthProvider } from "./context/AuthContext"
+import { AuthProvider } from "./context/AuthContext.tsx";
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
