@@ -1,21 +1,21 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
-import { BrowserRouter, Routes, Route } from "react-router";
-import Home from "./pages/Home";
-import Leaderboard from "./pages/Leaderboard";
-import Profile from "./pages/Profile";
-import Login from "./pages/Login";
-import Register from "./pages/Register";
-import Navbar from "./components/Navbar";
-import { AuthProvider } from "./context/AuthContext.tsx";
-import { SpeedInsights } from '@vercel/speed-insights/react';
+import { BrowserRouter, Routes, Route } from 'react-router'
+import Home from './pages/Home'
+import Leaderboard from './pages/Leaderboard'
+import Profile from './pages/Profile'
+import Login from './pages/Login'
+import Register from './pages/Register'
+import Navbar from './components/Navbar'
+import { AuthProvider } from './context/AuthContext.tsx'
+import { SpeedInsights } from '@vercel/speed-insights/react'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <AuthProvider>
       <BrowserRouter>
-      <SpeedInsights />
+        <SpeedInsights />
         <Navbar />
         <Routes>
           <Route path="/" element={<Home />} />
@@ -26,5 +26,5 @@ createRoot(document.getElementById('root')!).render(
         </Routes>
       </BrowserRouter>
     </AuthProvider>
-  </StrictMode>,
+  </StrictMode>
 )
