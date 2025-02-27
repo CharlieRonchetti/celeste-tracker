@@ -1,5 +1,58 @@
-@import "tailwindcss";
+@import 'tailwindcss';
+@import '@fontsource/inter/index.css';
 
-@tailwind base;
-@tailwind components;
 @tailwind utilities;
+
+@layer base {
+  html {
+    font-family: 'Inter', sans-serif;
+  }
+
+  h1 {
+    font-size: 55px;
+    font-weight: bold;
+    line-height: 1.2;
+    letter-spacing: -0.352px;
+  }
+
+  h2 {
+    font-size: 45px;
+    font-weight: bold;
+    line-height: 1.2;
+    letter-spacing: -0.352px;
+  }
+
+  h3 {
+    font-size: 37px;
+    font-weight: bold;
+    line-height: 1.2;
+    letter-spacing: -0.352px;
+  }
+
+  h4 {
+    font-size: 31px;
+    font-weight: bold;
+    line-height: 1.2;
+    letter-spacing: -0.352px;
+  }
+
+  h5 {
+    font-size: 26px;
+    font-weight: bold;
+    line-height: 1.2;
+    letter-spacing: -0.352px;
+  }
+
+  h6 {
+    font-size: 22px;
+    font-weight: bold;
+    line-height: 1.2;
+    letter-spacing: -0.352px;
+  }
+
+  p {
+    font-size: 16px;
+    font-weight: normal;
+    line-height: 1.5;
+  }
+}
