@@ -15,7 +15,7 @@ router.post('/', async (req, res) => {
   const errors: SigninErrors = {}
 
   // Attempt to sign the user in
-  const { error } = await supabase.auth.signInWithPassword({ email, password })
+  const { data, error } = await supabase.auth.signInWithPassword({ email, password })
 
   if (error && error.message.includes('Invalid login credentials')) {
     errors.password = 'Incorrect email or password. Please try again.'
@@ -25,7 +25,7 @@ router.post('/', async (req, res) => {
     return res.status(400).json({ errors })
   }
 
-  res.status(200).json({ message: 'User successfully signed in' })
+  res.status(200).json({ message: 'User successfully signed in', session: data.session })
 })
 
 export default router

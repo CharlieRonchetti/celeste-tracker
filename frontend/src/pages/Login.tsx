@@ -104,7 +104,7 @@ export default function Login() {
           <p className="mb-16 text-center text-[14px] text-zinc-600">
             Don't have an account?
             <span className="cursor-pointer text-black">
-              <Link to="/register">Register</Link>
+              <Link to="/register"> Register</Link>
             </span>
           </p>
         </form>

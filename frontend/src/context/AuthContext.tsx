@@ -24,18 +24,35 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     // Check if a user is already logged in
     const fetchUser = async () => {
       const {
-        data: { user },
-      } = await supabase.auth.getUser()
-      setCurrentUser(user)
-      //setUserLoggedIn(true);
+        data: { session },
+      } = await supabase.auth.getSession()
+
+      if (session?.user) {
+        setCurrentUser(session.user)
+        setUserLoggedIn(true)
+      } else {
+        setCurrentUser(null)
+        setUserLoggedIn(false)
+      }
       setLoading(false)
     }
 
     fetchUser()
 
+    const refreshSession = async () => {
+      await supabase.auth.refreshSession()
+    }
+    refreshSession()
+
     // Listen for auth state changes
     const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
-      setCurrentUser(session?.user || null)
+      if (session?.user) {
+        setCurrentUser(session.user)
+        setUserLoggedIn(true)
+      } else {
+        setCurrentUser(null)
+        setUserLoggedIn(false)
+      }
     })
 
     return () => listener.subscription.unsubscribe()
@@ -55,6 +72,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
       if (!response.ok) {
         return data.errors
+      }
+
+      // Store session information
+      if (data.session) {
+        await supabase.auth.setSession(data.session)
       }
 
       setUserLoggedIn(true)
@@ -80,6 +102,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
       if (!response.ok) {
         return data.errors
+      }
+
+      // Store session information
+      if (data.session) {
+        await supabase.auth.setSession(data.session)
       }
 
       setUserLoggedIn(true)
