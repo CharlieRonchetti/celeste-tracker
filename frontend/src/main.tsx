@@ -7,6 +7,7 @@ import Leaderboard from './pages/Leaderboard'
 import Profile from './pages/Profile'
 import Login from './pages/Login'
 import Register from './pages/Register'
+import Settings from './pages/Settings'
 import Navbar from './components/Navbar'
 import { AuthProvider } from './context/AuthContext.tsx'
 import { SpeedInsights } from '@vercel/speed-insights/react'
@@ -23,6 +24,7 @@ createRoot(document.getElementById('root')!).render(
           <Route path="/profile" element={<Profile />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/settings" element={<Settings />} />
         </Routes>
       </BrowserRouter>
     </AuthProvider>

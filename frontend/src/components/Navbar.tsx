@@ -1,13 +1,13 @@
-import { Link, useNavigate } from 'react-router'
+import { Link } from 'react-router'
 import { useAuth } from '../context/AuthContext.tsx'
+import ProfileNavLabel from './ProfileNavLabel.tsx'
 
 export default function Navbar() {
-  const { userLoggedIn, signOut } = useAuth()
-  const navigate = useNavigate()
+  const { userLoggedIn } = useAuth()
 
   return (
-    <nav className="bg-blue-500 p-4">
-      <div className="container mx-auto flex justify-between">
+    <nav className="bg-blue-500 p-3">
+      <div className="container mx-auto flex items-center justify-between">
         <div>
           <Link to="/" className="font-bold text-white">
             Home
@@ -21,18 +21,9 @@ export default function Navbar() {
         </div>
         <div>
           {userLoggedIn ? (
-            <>
-              <button
-                onClick={() =>
-                  signOut().then(() => {
-                    navigate('/login')
-                  })
-                }
-                className="mx-2 cursor-pointer text-white"
-              >
-                Logout
-              </button>
-            </>
+            <div className="flex gap-4">
+              <ProfileNavLabel />
+            </div>
           ) : (
             <>
               <Link to="/login" className="mx-2 text-white">
