@@ -2,6 +2,7 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
 import { BrowserRouter, Routes, Route } from 'react-router'
+import { AuthenticatedRoute } from './services/AuthenticatedRoute.tsx'
 import Home from './pages/Home'
 import Leaderboard from './pages/Leaderboard'
 import Profile from './pages/Profile'
@@ -21,10 +22,17 @@ createRoot(document.getElementById('root')!).render(
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/leaderboard" element={<Leaderboard />} />
-          <Route path="/profile" element={<Profile />} />
+          <Route path="/user/:username" element={<Profile />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/settings" element={<Settings />} />
+          <Route
+            path="/settings"
+            element={
+              <AuthenticatedRoute>
+                <Settings />
+              </AuthenticatedRoute>
+            }
+          />
         </Routes>
       </BrowserRouter>
     </AuthProvider>

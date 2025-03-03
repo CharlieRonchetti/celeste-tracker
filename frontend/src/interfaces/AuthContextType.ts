@@ -16,6 +16,7 @@ export interface AuthContextType {
   currentUser: User | null
   userLoggedIn: boolean
   loading: boolean
+  username: string
   signUp: (email: string, password: string, username: string, confirmedPassword: string) => Promise<SignupErrors | null>
   signIn: (email: string, password: string) => Promise<SigninErrors | null>
   signOut: () => Promise<void>

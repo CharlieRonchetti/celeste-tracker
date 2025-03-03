@@ -15,7 +15,7 @@ export default function Navbar() {
           <Link to="/leaderboard" className="mx-2 text-white">
             Leaderboard
           </Link>
-          <Link to="/profile" className="mx-2 text-white">
+          <Link to="/user" className="mx-2 text-white">
             Profile
           </Link>
         </div>

@@ -8,7 +8,7 @@ import { IoIosArrowDown } from 'react-icons/io'
 import { useEffect, useState, useRef } from 'react'
 
 export default function ProfileNavLabel() {
-  const { signOut } = useAuth()
+  const { signOut, username } = useAuth()
   const navigate = useNavigate()
   const [isTouch, setIsTouch] = useState(false)
   const [isOpen, setIsOpen] = useState(false)
@@ -53,7 +53,7 @@ export default function ProfileNavLabel() {
         <ul className="p-1">
           <li
             className="flex cursor-pointer items-center gap-1 rounded-lg px-4 py-2 hover:bg-gray-100"
-            onClick={() => navigate('/profile')}
+            onClick={() => navigate(`/user/${username}`)}
           >
             <FaUser /> Profile
           </li>
