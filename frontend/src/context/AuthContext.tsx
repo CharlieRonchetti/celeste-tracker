@@ -19,6 +19,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [currentUser, setCurrentUser] = useState<User | null>(null)
   const [userLoggedIn, setUserLoggedIn] = useState(false)
   const [loading, setLoading] = useState(true)
+  const [username, setUsername] = useState('')
 
   useEffect(() => {
     // Check if a user is already logged in
@@ -109,6 +110,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         await supabase.auth.setSession(data.session)
       }
 
+      setUsername(data.username)
       setUserLoggedIn(true)
       return null
     } catch (error) {
@@ -129,7 +131,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   return (
-    <AuthContext.Provider value={{ currentUser, userLoggedIn, loading, signUp, signIn, signOut }}>
+    <AuthContext.Provider value={{ currentUser, userLoggedIn, loading, username, signUp, signIn, signOut }}>
       {children}
     </AuthContext.Provider>
   )

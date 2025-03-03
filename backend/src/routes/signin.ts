@@ -25,7 +25,22 @@ router.post('/', async (req, res) => {
     return res.status(400).json({ errors })
   }
 
-  res.status(200).json({ message: 'User successfully signed in', session: data.session })
+  const userID = data.user?.id
+
+  const { data: profileData, error: usernameError } = await supabase
+    .from('profiles')
+    .select('username')
+    .eq('id', userID)
+    .single()
+
+  if (usernameError) {
+    console.error('Error fetching username:', usernameError.message)
+    return res.status(500).json({ error: 'Failed to retrieve username' })
+  }
+
+  res
+    .status(200)
+    .json({ message: 'User successfully signed in', session: data.session, username: profileData.username })
 })
 
 export default router
