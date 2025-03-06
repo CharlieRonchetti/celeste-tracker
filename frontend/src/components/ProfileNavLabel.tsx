@@ -1,18 +1,21 @@
-import pfpPlacehold from '../assets/image.png'
 import { useNavigate } from 'react-router'
 import { useAuth } from '../context/AuthContext.tsx'
 import { FaUser } from 'react-icons/fa'
 import { IoMdSettings } from 'react-icons/io'
 import { IoLogOut } from 'react-icons/io5'
 import { IoIosArrowDown } from 'react-icons/io'
+import defaultpfp from '../assets/image.png'
 import { useEffect, useState, useRef } from 'react'
+import { useSettings } from '../hooks/useSettings.ts'
 
 export default function ProfileNavLabel() {
-  const { signOut, username } = useAuth()
+  const { signOut } = useAuth()
   const navigate = useNavigate()
   const [isTouch, setIsTouch] = useState(false)
   const [isOpen, setIsOpen] = useState(false)
+  const { avatar } = useSettings()
   const dropdownRef = useRef<HTMLDivElement>(null)
+  const username = localStorage.getItem('username')
 
   // Detect if device is touchscreen
   useEffect(() => {
@@ -41,7 +44,7 @@ export default function ProfileNavLabel() {
   return (
     <div className="group relative" ref={dropdownRef}>
       <div className="flex items-center gap-1">
-        <img src={pfpPlacehold} onClick={() => toggleDropdown()} className="h-10 rounded-lg"></img>
+        <img src={avatar || defaultpfp} onClick={() => toggleDropdown()} className="h-10 rounded-lg"></img>
         <IoIosArrowDown
           className={`scale-100 rotate-0 text-gray-300 transition-all duration-600 ease-in-out group-hover:rotate-540 ${isOpen ? 'rotate-540' : 'roate-0'}`}
         />

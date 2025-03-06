@@ -72,11 +72,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const data = await response.json()
 
       if (!response.ok) {
+        console.log(data.error)
         return data.errors
       }
 
       // Store session information
+      // CURRENTLY BROKEN BECAUSE EMAIL VERIFICATION IS NOT IMPLEMENTED
       if (data.session) {
+        localStorage.setItem('username', username)
         await supabase.auth.setSession(data.session)
       }
 
@@ -107,6 +110,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
       // Store session information
       if (data.session) {
+        localStorage.setItem('username', data.username)
         await supabase.auth.setSession(data.session)
       }
 
@@ -127,6 +131,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     // Ensure the browser session is cleared
     localStorage.removeItem('supabase.auth.token')
+    localStorage.removeItem('username')
+    localStorage.removeItem('user_settings')
+    localStorage.removeItem('avatar')
     sessionStorage.clear()
   }
 

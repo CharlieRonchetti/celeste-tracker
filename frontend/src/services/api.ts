@@ -1,4 +1,5 @@
 import { supabase } from '../services/supabase.ts'
+import { User } from '@supabase/supabase-js'
 
 const API_URL = import.meta.env.VITE_API_URL
 
@@ -34,4 +35,28 @@ export async function submitRun(runData: { user_id: number; category: string; ti
   })
   if (!response.ok) throw new Error('Failed to submit run')
   return response.json()
+}
+
+export async function getAvatar(currentUser: User | null) {
+  if (localStorage.getItem('avatar')) {
+    return localStorage.getItem('avatar')
+  } else {
+    const { data: avatarData, error: fetchError } = await supabase
+      .from('profiles')
+      .select('avatar')
+      .eq('id', currentUser?.id)
+      .single()
+
+    if (fetchError) {
+      console.error('Error fetching avatar:', fetchError.message)
+      return
+    }
+
+    if (avatarData.avatar === null) return
+
+    if (avatarData) {
+      localStorage.setItem('avatar', avatarData.avatar)
+      return localStorage.getItem('avatar')
+    }
+  }
 }
