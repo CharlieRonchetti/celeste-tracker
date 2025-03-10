@@ -133,7 +133,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     localStorage.removeItem('supabase.auth.token')
     localStorage.removeItem('username')
     localStorage.removeItem('user_settings')
-    localStorage.removeItem('avatar')
+    localStorage.removeItem('profile')
     sessionStorage.clear()
   }
 

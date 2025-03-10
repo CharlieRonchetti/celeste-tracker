@@ -37,13 +37,22 @@ export async function submitRun(runData: { user_id: number; category: string; ti
   return response.json()
 }
 
-export async function getAvatar(currentUser: User | null) {
-  if (localStorage.getItem('avatar')) {
-    return localStorage.getItem('avatar')
+export async function getProfile(currentUser: User | null) {
+  // Function to populate profile related data in settings context
+  // from local storage or db if local storage is not populated
+
+  // Get user's avatar
+  if (localStorage.getItem('profile')) {
+    const profileFromLocalStorage = localStorage.getItem('profile')
+    if (profileFromLocalStorage) {
+      return JSON.parse(profileFromLocalStorage)
+    } else {
+      return null
+    }
   } else {
-    const { data: avatarData, error: fetchError } = await supabase
+    const { data: profileData, error: fetchError } = await supabase
       .from('profiles')
-      .select('avatar')
+      .select()
       .eq('id', currentUser?.id)
       .single()
 
@@ -52,11 +61,17 @@ export async function getAvatar(currentUser: User | null) {
       return
     }
 
-    if (avatarData.avatar === null) return
+    if (profileData === null) return
 
-    if (avatarData) {
-      localStorage.setItem('avatar', avatarData.avatar)
-      return localStorage.getItem('avatar')
+    if (profileData) {
+      localStorage.setItem('profile', JSON.stringify(profileData))
+
+      const profileFromLocalStorage = localStorage.getItem('profile')
+      if (profileFromLocalStorage) {
+        return JSON.parse(profileFromLocalStorage)
+      } else {
+        return
+      }
     }
   }
 }

@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useDropzone } from 'react-dropzone'
+import { FileRejection, useDropzone } from 'react-dropzone'
 import { supabase } from '../services/supabase.ts'
 import { useAuth } from '../context/AuthContext'
 import defaultpfp from '../assets/image.png'
@@ -11,6 +11,7 @@ export default function ProfilePictureUpload() {
   const { currentUser } = useAuth()
   const [imagePreview, setImagePreview] = useState<string | null>(null)
   const { avatar, setAvatar } = useSettings()
+  const [avatarError, setAvatarError] = useState<string | null>('')
 
   const onDrop = async (acceptedFiles: File[]) => {
     const pfp = acceptedFiles[0]
@@ -22,6 +23,25 @@ export default function ProfilePictureUpload() {
       uploadImage(pfp)
     }
     reader.readAsDataURL(pfp)
+    setAvatarError('')
+  }
+
+  const onDropRejected = (fileRejections: FileRejection[]) => {
+    if (fileRejections.length > 0) {
+      const { errors } = fileRejections[0]
+
+      errors.map((err) => {
+        if (err.code === 'file-too-large') {
+          setAvatarError('File is too large. Maximum size is 3mb.')
+        } else if (err.code === 'file-invalid-type') {
+          setAvatarError('Invalid file format. Only JPEG, PNG and WEBP are accepted.')
+        } else if (err.code === 'too-many-files') {
+          setAvatarError('You can only upload one file at a time.')
+        } else {
+          setAvatarError('An unknown error occurred, please try again.')
+        }
+      })
+    }
   }
 
   const uploadImage = async (img: File) => {
@@ -41,8 +61,11 @@ export default function ProfilePictureUpload() {
 
       const data = await response.json()
       if (response.ok) {
-        //setCurrentProfilePic(data.uploadedUrl)
         setAvatar(data.uploadedUrl)
+        const profileFromLocalStorage = localStorage.getItem('profile')
+        const profile = profileFromLocalStorage ? JSON.parse(profileFromLocalStorage) : {}
+        profile.avatar = data.uploadedUrl
+        localStorage.setItem('profile', JSON.stringify(profile))
       } else {
         console.error('Image upload failed:', data.message)
       }
@@ -52,7 +75,6 @@ export default function ProfilePictureUpload() {
         .from('profiles')
         .update({ avatar: data.uploadedUrl })
         .eq('id', currentUser?.id)
-      localStorage.setItem('avatar', data.uploadedUrl)
 
       if (fetchError) {
         console.error('Error updating avatar:', fetchError.message)
@@ -66,33 +88,38 @@ export default function ProfilePictureUpload() {
 
   const { getRootProps, getInputProps } = useDropzone({
     onDrop,
+    onDropRejected,
     accept: {
       'image/jpeg': [],
       'image/png': [],
       'image/webp': [],
     },
     maxSize: 3 * 1024 * 1024, // 3MB limit
+    multiple: false,
   })
 
   return (
-    <div className="flex gap-4 p-4">
-      {/* Upload Box */}
-      <div
-        {...getRootProps()}
-        className="flex h-48 w-48 cursor-pointer items-center justify-center rounded-lg border-2 border-dashed border-gray-400 hover:bg-gray-100"
-      >
-        <input {...getInputProps()} />
-        {imagePreview ? (
-          <img src={imagePreview} alt="Preview" className="h-full w-full rounded-lg object-cover" />
-        ) : (
-          <p className="items-center p-4 text-center">Drop image here or click to upload</p>
-        )}
-      </div>
+    <div>
+      <div className="flex gap-4">
+        {/* Upload Box */}
+        <div
+          {...getRootProps()}
+          className="flex h-56 w-56 cursor-pointer items-center justify-center rounded-lg border-2 border-dashed border-gray-400 hover:bg-gray-100"
+        >
+          <input {...getInputProps()} />
+          {imagePreview ? (
+            <img src={imagePreview} alt="Preview" className="h-full w-full rounded-lg object-cover" />
+          ) : (
+            <p className="items-center p-4 text-center">Drop image here or click to upload</p>
+          )}
+        </div>
 
-      {/* Current Profile Picture */}
-      <div className="h-48 w-48 overflow-hidden rounded-lg">
-        <img src={avatar || defaultpfp} alt="Profile" className="h-full w-full object-cover" />
+        {/* Current Profile Picture */}
+        <div className="h-56 w-56 overflow-hidden rounded-lg">
+          <img src={avatar || defaultpfp} alt="Profile" className="h-full w-full object-cover" />
+        </div>
       </div>
+      <p className="tiny text-red-500">{avatarError}</p>
     </div>
   )
 }

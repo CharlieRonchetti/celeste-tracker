@@ -3,7 +3,7 @@ import { supabase } from '../services/supabase'
 import { useAuth } from '../context/AuthContext'
 import { SettingsContext } from './SettingsContext'
 import { UserSettingsType } from '../interfaces/UserSettingsType'
-import { getAvatar } from '../services/api.ts'
+import { getProfile } from '../services/api.ts'
 
 interface SettingsProviderProps {
   children: ReactNode
@@ -17,6 +17,7 @@ export const SettingsProvider = ({ children }: SettingsProviderProps) => {
     return storedSettings ? JSON.parse(storedSettings) : null
   })
   const [avatar, setAvatar] = useState<string | undefined>(undefined)
+  const [pronouns, setPronouns] = useState<string | undefined>('None')
 
   useEffect(() => {
     const fetchSettings = async () => {
@@ -68,15 +69,18 @@ export const SettingsProvider = ({ children }: SettingsProviderProps) => {
 
     fetchSettings()
 
-    // Fetch user profile picture
-    const fetchAvatar = async () => {
+    // Fetch user profile data
+    const fetchProfile = async () => {
       if (currentUser) {
-        const avatar = await getAvatar(currentUser)
-        setAvatar(avatar as string)
+        const profile = await getProfile(currentUser)
+        if (profile) {
+          setAvatar(profile.avatar)
+          setPronouns(profile.pronouns)
+        }
       }
     }
 
-    fetchAvatar()
+    fetchProfile()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentUser?.id]) // Settings dependency is redundant here
 
@@ -104,7 +108,7 @@ export const SettingsProvider = ({ children }: SettingsProviderProps) => {
   }
 
   return (
-    <SettingsContext.Provider value={{ settings, updateSetting, avatar, setAvatar }}>
+    <SettingsContext.Provider value={{ settings, updateSetting, avatar, setAvatar, pronouns, setPronouns }}>
       {children}
     </SettingsContext.Provider>
   )
