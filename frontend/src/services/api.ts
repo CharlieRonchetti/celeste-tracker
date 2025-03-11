@@ -1,4 +1,5 @@
 import { supabase } from '../services/supabase.ts'
+import { User } from '@supabase/supabase-js'
 
 const API_URL = import.meta.env.VITE_API_URL
 
@@ -34,4 +35,43 @@ export async function submitRun(runData: { user_id: number; category: string; ti
   })
   if (!response.ok) throw new Error('Failed to submit run')
   return response.json()
+}
+
+export async function getProfile(currentUser: User | null) {
+  // Function to populate profile related data in settings context
+  // from local storage or db if local storage is not populated
+
+  // Get user's avatar
+  if (localStorage.getItem('profile')) {
+    const profileFromLocalStorage = localStorage.getItem('profile')
+    if (profileFromLocalStorage) {
+      return JSON.parse(profileFromLocalStorage)
+    } else {
+      return null
+    }
+  } else {
+    const { data: profileData, error: fetchError } = await supabase
+      .from('profiles')
+      .select()
+      .eq('id', currentUser?.id)
+      .single()
+
+    if (fetchError) {
+      console.error('Error fetching avatar:', fetchError.message)
+      return
+    }
+
+    if (profileData === null) return
+
+    if (profileData) {
+      localStorage.setItem('profile', JSON.stringify(profileData))
+
+      const profileFromLocalStorage = localStorage.getItem('profile')
+      if (profileFromLocalStorage) {
+        return JSON.parse(profileFromLocalStorage)
+      } else {
+        return
+      }
+    }
+  }
 }

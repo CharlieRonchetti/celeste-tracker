@@ -8,6 +8,10 @@
     font-family: 'Inter', sans-serif;
   }
 
+  body {
+    background-color: #edf1f5;
+  }
+
   h1 {
     font-size: 55px;
     font-weight: bold;
@@ -48,6 +52,25 @@
     font-weight: bold;
     line-height: 1.2;
     letter-spacing: -0.352px;
+  }
+
+  .regular {
+    font-size: 18px;
+    font-weight: bold;
+    line-height: 1.2;
+    letter-spacing: -0.352px;
+  }
+
+  .small {
+    font-size: 14px;
+    font-weight: normal;
+    line-height: 1.5;
+  }
+
+  .tiny {
+    font-size: 12px;
+    font-weight: normal;
+    line-height: 1.5;
   }
 
   p {

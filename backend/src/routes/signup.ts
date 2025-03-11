@@ -119,7 +119,16 @@ router.post('/', async (req, res) => {
     return res.status(500).json({ error: `Profile creation error: ${profileError.message}` })
   }
 
-  res.status(200).json({ message: 'User created successfully', session: data.session })
+  // Sign user in to get a session object
+  // CURRENTLY BROKEN BECAUSE EMAIL VERIFICATION IS NOT IMPLEMENTED
+  // REPLACE THIS SECTION WITH EMAIIL VERIFICATION
+  const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({ email, password })
+
+  if (signInError) {
+    return res.status(500).json({ error: `Error signing in: ${signInError}` })
+  }
+
+  res.status(200).json({ message: 'User created successfully', session: signInData.session })
 })
 
 export default router
