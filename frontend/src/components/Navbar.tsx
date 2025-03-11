@@ -6,7 +6,7 @@ export default function Navbar() {
   const { userLoggedIn } = useAuth()
 
   return (
-    <nav className="bg-blue-500 p-3">
+    <nav className="bg-[#030f24] p-3">
       <div className="container mx-auto flex items-center justify-between">
         <div>
           <Link to="/" className="font-bold text-white">

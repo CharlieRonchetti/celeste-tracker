@@ -7,4 +7,6 @@ export interface SettingsContextType {
   setAvatar: React.Dispatch<React.SetStateAction<string | undefined>>
   pronouns: string | undefined
   setPronouns: React.Dispatch<React.SetStateAction<string | undefined>>
+  country: string | undefined
+  setCountry: React.Dispatch<React.SetStateAction<string | undefined>>
 }

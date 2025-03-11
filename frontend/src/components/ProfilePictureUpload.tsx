@@ -12,10 +12,13 @@ export default function ProfilePictureUpload() {
   const [imagePreview, setImagePreview] = useState<string | null>(null)
   const { avatar, setAvatar } = useSettings()
   const [avatarError, setAvatarError] = useState<string | null>('')
+  const [imageSelected, setImageSelected] = useState<boolean>(false)
 
   const onDrop = async (acceptedFiles: File[]) => {
     const pfp = acceptedFiles[0]
     if (!pfp) return
+
+    setImageSelected(true)
 
     const reader = new FileReader()
     reader.onload = () => {
@@ -100,17 +103,19 @@ export default function ProfilePictureUpload() {
 
   return (
     <div>
-      <div className="flex gap-4">
+      <p className="regular font-bold">Avatar</p>
+      <p className="tiny py-1">Max size: 3mb, Optimal dimensions: 230x230px, Accepted formats: JPEG, PNG, WEBP</p>
+      <div className="relative flex gap-4">
         {/* Upload Box */}
         <div
           {...getRootProps()}
-          className="flex h-56 w-56 cursor-pointer items-center justify-center rounded-lg border-2 border-dashed border-gray-400 hover:bg-gray-100"
+          className={`flex h-56 w-56 cursor-pointer items-center justify-center rounded-lg bg-[#edf1f5] ${!imageSelected ? "after:absolute after:h-50 after:w-50 after:border-2 after:border-dashed after:border-gray-400 after:content-['']" : ''} hover:bg-gray-100`}
         >
           <input {...getInputProps()} />
           {imagePreview ? (
             <img src={imagePreview} alt="Preview" className="h-full w-full rounded-lg object-cover" />
           ) : (
-            <p className="items-center p-4 text-center">Drop image here or click to upload</p>
+            <p className="items-center p-6 text-center">Drop image here or click to upload</p>
           )}
         </div>
 

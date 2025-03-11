@@ -6,6 +6,7 @@ import signupRouter from './routes/signup.ts'
 import signinRouter from './routes/signin.ts'
 import uploadImageRouter from './routes/uploadImage.ts'
 import updatePronouns from './routes/updatePronouns.ts'
+import updateCountry from './routes/updateCountry.ts'
 
 dotenv.config() // Load environment variables
 
@@ -25,6 +26,7 @@ app.use('/api/signup', signupRouter)
 app.use('/api/signin', signinRouter)
 app.use('/api/upload-image', uploadImageRouter)
 app.use('/api/update-pronouns', updatePronouns)
+app.use('/api/update-country', updateCountry)
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)

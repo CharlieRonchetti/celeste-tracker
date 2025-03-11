@@ -41,7 +41,7 @@ export default function PronounSettings() {
   return (
     <div>
       <p className="regular font-bold">Pronouns</p>
-      <div className="flex gap-4">
+      <div className="flex gap-4 pt-1">
         <div>
           <label className="cursor-pointer">
             <input

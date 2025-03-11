@@ -18,6 +18,7 @@ export const SettingsProvider = ({ children }: SettingsProviderProps) => {
   })
   const [avatar, setAvatar] = useState<string | undefined>(undefined)
   const [pronouns, setPronouns] = useState<string | undefined>('None')
+  const [country, setCountry] = useState<string | undefined>('None')
 
   useEffect(() => {
     const fetchSettings = async () => {
@@ -76,6 +77,7 @@ export const SettingsProvider = ({ children }: SettingsProviderProps) => {
         if (profile) {
           setAvatar(profile.avatar)
           setPronouns(profile.pronouns)
+          setCountry(profile.country)
         }
       }
     }
@@ -108,7 +110,9 @@ export const SettingsProvider = ({ children }: SettingsProviderProps) => {
   }
 
   return (
-    <SettingsContext.Provider value={{ settings, updateSetting, avatar, setAvatar, pronouns, setPronouns }}>
+    <SettingsContext.Provider
+      value={{ settings, updateSetting, avatar, setAvatar, pronouns, setPronouns, country, setCountry }}
+    >
       {children}
     </SettingsContext.Provider>
   )
