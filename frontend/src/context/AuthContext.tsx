@@ -19,23 +19,41 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [currentUser, setCurrentUser] = useState<User | null>(null)
   const [userLoggedIn, setUserLoggedIn] = useState(false)
   const [loading, setLoading] = useState(true)
+  const [username, setUsername] = useState('')
 
   useEffect(() => {
     // Check if a user is already logged in
     const fetchUser = async () => {
       const {
-        data: { user },
-      } = await supabase.auth.getUser()
-      setCurrentUser(user)
-      //setUserLoggedIn(true);
+        data: { session },
+      } = await supabase.auth.getSession()
+
+      if (session?.user) {
+        setCurrentUser(session.user)
+        setUserLoggedIn(true)
+      } else {
+        setCurrentUser(null)
+        setUserLoggedIn(false)
+      }
       setLoading(false)
     }
 
     fetchUser()
 
+    const refreshSession = async () => {
+      await supabase.auth.refreshSession()
+    }
+    refreshSession()
+
     // Listen for auth state changes
     const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
-      setCurrentUser(session?.user || null)
+      if (session?.user) {
+        setCurrentUser(session.user)
+        setUserLoggedIn(true)
+      } else {
+        setCurrentUser(null)
+        setUserLoggedIn(false)
+      }
     })
 
     return () => listener.subscription.unsubscribe()
@@ -54,7 +72,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const data = await response.json()
 
       if (!response.ok) {
+        console.log(data.error)
         return data.errors
+      }
+
+      // Store session information
+      // CURRENTLY BROKEN BECAUSE EMAIL VERIFICATION IS NOT IMPLEMENTED
+      if (data.session) {
+        localStorage.setItem('username', username)
+        await supabase.auth.setSession(data.session)
       }
 
       setUserLoggedIn(true)
@@ -82,6 +108,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         return data.errors
       }
 
+      // Store session information
+      if (data.session) {
+        localStorage.setItem('username', data.username)
+        await supabase.auth.setSession(data.session)
+      }
+
+      setUsername(data.username)
       setUserLoggedIn(true)
       return null
     } catch (error) {
@@ -98,11 +131,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     // Ensure the browser session is cleared
     localStorage.removeItem('supabase.auth.token')
+    localStorage.removeItem('username')
+    localStorage.removeItem('user_settings')
+    localStorage.removeItem('profile')
     sessionStorage.clear()
   }
 
   return (
-    <AuthContext.Provider value={{ currentUser, userLoggedIn, loading, signUp, signIn, signOut }}>
+    <AuthContext.Provider value={{ currentUser, userLoggedIn, loading, username, signUp, signIn, signOut }}>
       {children}
     </AuthContext.Provider>
   )

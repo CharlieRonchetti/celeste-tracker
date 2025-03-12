@@ -42,7 +42,7 @@ export default function Login() {
     <div>
       {userLoggedIn && <Navigate to={'/'} replace={true} />}
 
-      <div className="container mx-auto mt-16 flex w-[75%] max-w-full flex-col items-center rounded-xl border-1 border-solid border-neutral-400 shadow-xl md:w-[60%] lg:w-[50%] xl:w-[40%] 2xl:w-[30%]">
+      <div className="container mx-auto mt-16 flex w-[75%] max-w-full flex-col items-center rounded-xl border-1 border-solid border-neutral-400 bg-white shadow-xl md:w-[60%] lg:w-[50%] xl:w-[40%] 2xl:w-[30%]">
         <h2 className="mt-16 mb-8">Login</h2>
 
         <form onSubmit={onSubmit} className="flex w-full flex-col px-16">
@@ -104,7 +104,7 @@ export default function Login() {
           <p className="mb-16 text-center text-[14px] text-zinc-600">
             Don't have an account?
             <span className="cursor-pointer text-black">
-              <Link to="/register">Register</Link>
+              <Link to="/register"> Register</Link>
             </span>
           </p>
         </form>
