@@ -1,5 +1,6 @@
 import { useSettings } from '../hooks/useSettings.ts'
 import { supabase } from '../services/supabase.ts'
+import { notifySuccess, notifyError } from '../services/toastService'
 
 const API_URL = import.meta.env.VITE_API_URL
 
@@ -25,6 +26,8 @@ export default function PronounSettings() {
       const data = await response.json()
       if (response.ok) {
         console.log('Successfully updated pronouns to: ', data.pronounData.pronouns)
+        notifySuccess('Pronouns updated successfully!')
+
         setPronouns(data.pronounData.pronouns)
         const profileFromLocalStorage = localStorage.getItem('profile')
         const profile = profileFromLocalStorage ? JSON.parse(profileFromLocalStorage) : {}
@@ -32,16 +35,18 @@ export default function PronounSettings() {
         localStorage.setItem('profile', JSON.stringify(profile))
       } else {
         console.error('Pronoun update failed:', data.error)
+        notifyError('Something went wrong')
       }
     } catch (error) {
       console.error('Error updating pronouns: ', error)
+      notifyError('Something went wrong')
     }
   }
 
   return (
     <div>
       <p className="regular font-bold">Pronouns</p>
-      <div className="flex gap-4 pt-1">
+      <div className="gap-4 pt-1 sm:flex">
         <div>
           <label className="cursor-pointer">
             <input

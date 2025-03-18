@@ -4,6 +4,7 @@ import { supabase } from '../services/supabase.ts'
 import { useAuth } from '../context/AuthContext'
 import defaultpfp from '../assets/image.png'
 import { useSettings } from '../hooks/useSettings.ts'
+import { notifySuccess, notifyError } from '../services/toastService'
 
 const API_URL = import.meta.env.VITE_API_URL
 
@@ -71,6 +72,7 @@ export default function ProfilePictureUpload() {
         localStorage.setItem('profile', JSON.stringify(profile))
       } else {
         console.error('Image upload failed:', data.message)
+        notifyError('Something went wrong')
       }
 
       // Update the avatar row for to the new URL in the profiles table
@@ -81,11 +83,14 @@ export default function ProfilePictureUpload() {
 
       if (fetchError) {
         console.error('Error updating avatar:', fetchError.message)
+        notifyError('Something went wrong')
       } else {
         console.log('Avatar updated:', avatarData)
+        notifySuccess('Avatar updated successfully!')
       }
     } catch (error) {
       console.error('Error uploading image: ', error)
+      notifyError('Something went wrong')
     }
   }
 
@@ -105,11 +110,11 @@ export default function ProfilePictureUpload() {
     <div>
       <p className="regular font-bold">Avatar</p>
       <p className="tiny py-1">Max size: 3mb, Optimal dimensions: 230x230px, Accepted formats: JPEG, PNG, WEBP</p>
-      <div className="relative flex gap-4">
+      <div className="relative sm:flex sm:gap-4">
         {/* Upload Box */}
         <div
           {...getRootProps()}
-          className={`flex h-56 w-56 cursor-pointer items-center justify-center rounded-lg bg-[#edf1f5] ${!imageSelected ? "after:absolute after:h-50 after:w-50 after:border-2 after:border-dashed after:border-gray-400 after:content-['']" : ''} hover:bg-gray-100`}
+          className={`mb-4 flex h-56 w-56 cursor-pointer items-center justify-center rounded-lg bg-[#edf1f5] sm:mb-0 ${!imageSelected ? "after:absolute after:h-50 after:w-50 after:border-2 after:border-dashed after:border-gray-400 after:content-['']" : ''} hover:bg-gray-100`}
         >
           <input {...getInputProps()} />
           {imagePreview ? (

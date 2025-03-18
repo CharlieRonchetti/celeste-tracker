@@ -50,6 +50,7 @@ export async function getProfile(currentUser: User | null) {
       return null
     }
   } else {
+    console.log('Attempting to get users profile')
     const { data: profileData, error: fetchError } = await supabase
       .from('profiles')
       .select()
@@ -57,7 +58,7 @@ export async function getProfile(currentUser: User | null) {
       .single()
 
     if (fetchError) {
-      console.error('Error fetching avatar:', fetchError.message)
+      console.error('Error fetching profile:', fetchError.message)
       return
     }
 
@@ -65,6 +66,7 @@ export async function getProfile(currentUser: User | null) {
 
     if (profileData) {
       localStorage.setItem('profile', JSON.stringify(profileData))
+      localStorage.setItem('username', profileData.username)
 
       const profileFromLocalStorage = localStorage.getItem('profile')
       if (profileFromLocalStorage) {
