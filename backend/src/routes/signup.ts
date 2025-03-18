@@ -2,6 +2,7 @@ import express from 'express'
 import { supabase } from '../utils/supabase.ts'
 
 const router = express.Router()
+const redirectUrl = process.env.SUPABASE_REDIRECT_URL!
 
 // Email Validation
 const validateEmail = (email: string): string | null => {
@@ -99,7 +100,11 @@ router.post('/', async (req, res) => {
   }
 
   // Attempt to create a new user in auth.users with the given details
-  const { data, error } = await supabase.auth.signUp({ email, password })
+  const { data, error } = await supabase.auth.signUp({
+    email,
+    password,
+    options: { emailRedirectTo: `${redirectUrl}/activated` },
+  })
 
   if (error) {
     return res.status(400).json({ error: error.message })
@@ -113,22 +118,14 @@ router.post('/', async (req, res) => {
   }
 
   // Insert a new profile based on user's ID
+  console.log('Attempting to insert new profile row')
   const { error: profileError } = await supabase.from('profiles').insert([{ id: user.id, username }])
 
   if (profileError) {
     return res.status(500).json({ error: `Profile creation error: ${profileError.message}` })
   }
 
-  // Sign user in to get a session object
-  // CURRENTLY BROKEN BECAUSE EMAIL VERIFICATION IS NOT IMPLEMENTED
-  // REPLACE THIS SECTION WITH EMAIIL VERIFICATION
-  const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({ email, password })
-
-  if (signInError) {
-    return res.status(500).json({ error: `Error signing in: ${signInError}` })
-  }
-
-  res.status(200).json({ message: 'User created successfully', session: signInData.session })
+  res.status(200).json({ message: 'User created successfully', isVerified: user.user_metadata.email_verified })
 })
 
 export default router

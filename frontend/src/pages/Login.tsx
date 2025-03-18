@@ -45,7 +45,7 @@ export default function Login() {
       <div className="container mx-auto mt-16 flex w-[75%] max-w-full flex-col items-center rounded-xl border-1 border-solid border-neutral-400 bg-white shadow-xl md:w-[60%] lg:w-[50%] xl:w-[40%] 2xl:w-[30%]">
         <h2 className="mt-16 mb-8">Login</h2>
 
-        <form onSubmit={onSubmit} className="flex w-full flex-col px-16">
+        <form onSubmit={onSubmit} className="flex w-full flex-col px-4 sm:px-16">
           <div className="relative mb-8">
             <input
               type="email"
@@ -97,9 +97,9 @@ export default function Login() {
           <button
             type="button"
             disabled={activeError || isSigningIn}
-            className={`mx-auto mb-1 max-w-fit cursor-pointer text-[14px] font-medium ${activeError ? 'cursor-not-allowed opacity-75' : 'cursor-pointer hover:bg-blue-600 hover:shadow-lg'}`}
+            className={`mx-auto mb-1 max-w-fit cursor-pointer text-[14px] font-medium ${activeError ? 'cursor-not-allowed' : 'cursor-pointer'}`}
           >
-            Forgot Password
+            <Link to="/reset-password"> Forgot Password?</Link>
           </button>
           <p className="mb-16 text-center text-[14px] text-zinc-600">
             Don't have an account?

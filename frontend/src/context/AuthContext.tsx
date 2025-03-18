@@ -76,14 +76,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         return data.errors
       }
 
-      // Store session information
-      // CURRENTLY BROKEN BECAUSE EMAIL VERIFICATION IS NOT IMPLEMENTED
-      if (data.session) {
-        localStorage.setItem('username', username)
-        await supabase.auth.setSession(data.session)
-      }
-
-      setUserLoggedIn(true)
       return null
     } catch (error) {
       if (error instanceof Error) {
@@ -134,6 +126,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     localStorage.removeItem('username')
     localStorage.removeItem('user_settings')
     localStorage.removeItem('profile')
+    localStorage.removeItem('temp_email')
+
     sessionStorage.clear()
   }
 

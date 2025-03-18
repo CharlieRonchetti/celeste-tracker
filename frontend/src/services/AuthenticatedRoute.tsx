@@ -7,7 +7,8 @@ interface AuthenticatedRouteProps {
 }
 
 export const AuthenticatedRoute = ({ children }: AuthenticatedRouteProps) => {
-  const { currentUser } = useAuth()
+  const { currentUser, loading } = useAuth()
+  if (loading) return <p>Loading...</p>
   if (!currentUser) {
     return <Navigate to="/login"></Navigate>
   }

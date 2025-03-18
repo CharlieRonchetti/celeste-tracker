@@ -1,6 +1,7 @@
 import ReactFlagsSelect from 'react-flags-select'
 import { supabase } from '../services/supabase.ts'
 import { useSettings } from '../hooks/useSettings'
+import { notifySuccess, notifyError } from '../services/toastService'
 
 const API_URL = import.meta.env.VITE_API_URL
 
@@ -25,6 +26,8 @@ export default function CountrySelect() {
       const data = await response.json()
       if (response.ok) {
         console.log('Successfully updated country to: ', data.countryData.country)
+        notifySuccess('Country updated successfully!')
+
         setCountry(data.countryData.country)
         const profileFromLocalStorage = localStorage.getItem('profile')
         const profile = profileFromLocalStorage ? JSON.parse(profileFromLocalStorage) : {}
@@ -32,14 +35,17 @@ export default function CountrySelect() {
         localStorage.setItem('profile', JSON.stringify(profile))
       } else {
         console.error('Country update failed:', data.error)
+        notifyError('Something went wrong')
       }
     } catch (error) {
       console.error('Error updating country: ', error)
+      notifyError('Something went wrong')
     }
   }
 
   return (
     <div className="">
+      <p className="regular pb-2 font-bold">Country</p>
       <ReactFlagsSelect selected={country as string} onSelect={updateCountry} />
     </div>
   )

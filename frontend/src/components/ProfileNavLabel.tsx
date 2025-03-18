@@ -42,7 +42,7 @@ export default function ProfileNavLabel() {
   }, [])
 
   return (
-    <div className="group relative" ref={dropdownRef}>
+    <div className="group relative z-20" ref={dropdownRef}>
       <div className="flex items-center gap-1">
         <img src={avatar || defaultpfp} onClick={() => toggleDropdown()} className="h-10 rounded-lg"></img>
         <IoIosArrowDown
