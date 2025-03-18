@@ -35,7 +35,8 @@ router.post('/', async (req, res) => {
 
   if (usernameError) {
     console.error('Error fetching username:', usernameError.message)
-    return res.status(500).json({ error: 'Failed to retrieve username' })
+    errors.password = 'Failed to retrieve username'
+    return res.status(500).json({ errors })
   }
 
   res

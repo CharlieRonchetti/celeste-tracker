@@ -122,6 +122,7 @@ router.post('/', async (req, res) => {
   const { error: profileError } = await supabase.from('profiles').insert([{ id: user.id, username }])
 
   if (profileError) {
+    console.error(`Error inserting profile for user: ${user.id}, Message: ${profileError.message}`)
     return res.status(500).json({ error: `Profile creation error: ${profileError.message}` })
   }
 
