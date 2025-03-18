@@ -10,9 +10,13 @@ import Login from './pages/Login'
 import Register from './pages/Register'
 import Settings from './pages/Settings'
 import Navbar from './components/Navbar'
+import Activated from './pages/Activated.tsx'
+import ResetPassword from './pages/ResetPassword.tsx'
+import UpdatePassword from './pages/UpdatePassword.tsx'
 import { AuthProvider } from './context/AuthContext.tsx'
 import { SettingsProvider } from './context/SettingsProvider.tsx'
 import { SpeedInsights } from '@vercel/speed-insights/react'
+import { ToastContainer } from './services/toastService.tsx'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
@@ -20,6 +24,7 @@ createRoot(document.getElementById('root')!).render(
       <SettingsProvider>
         <BrowserRouter>
           <SpeedInsights />
+          <ToastContainer />
           <Navbar />
           <Routes>
             <Route path="/" element={<Home />} />
@@ -32,6 +37,16 @@ createRoot(document.getElementById('root')!).render(
               element={
                 <AuthenticatedRoute>
                   <Settings />
+                </AuthenticatedRoute>
+              }
+            />
+            <Route path="/activated" element={<Activated />} />
+            <Route path="/reset-password" element={<ResetPassword />} />
+            <Route
+              path="/update-password"
+              element={
+                <AuthenticatedRoute>
+                  <UpdatePassword />
                 </AuthenticatedRoute>
               }
             />

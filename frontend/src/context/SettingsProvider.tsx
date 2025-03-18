@@ -10,7 +10,7 @@ interface SettingsProviderProps {
 }
 
 export const SettingsProvider = ({ children }: SettingsProviderProps) => {
-  const { currentUser } = useAuth()
+  const { currentUser, loading } = useAuth()
   const [settings, setSettings] = useState<UserSettingsType | null>(() => {
     // Attempt to load from local storage first to avoid API call
     const storedSettings = localStorage.getItem('user_settings')
@@ -23,7 +23,7 @@ export const SettingsProvider = ({ children }: SettingsProviderProps) => {
   useEffect(() => {
     const fetchSettings = async () => {
       // Fetch settings from DB if they weren't found in local storage
-      if (!currentUser?.id) return
+      if (!currentUser?.id || loading) return
 
       if (settings) return
 
