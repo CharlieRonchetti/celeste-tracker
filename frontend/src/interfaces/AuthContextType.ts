@@ -5,6 +5,7 @@ interface SignupErrors {
   email?: string
   password?: string
   confirmedPassword?: string
+  general?: string
 }
 
 interface SigninErrors {

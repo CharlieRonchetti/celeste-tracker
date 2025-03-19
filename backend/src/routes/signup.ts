@@ -58,6 +58,7 @@ router.post('/', async (req, res) => {
     password?: string
     username?: string
     confirmedPassword?: string
+    general?: string
   }
 
   const errors: SignupErrors = {}
@@ -84,17 +85,6 @@ router.post('/', async (req, res) => {
     errors.email = 'The email you entered is already registered.'
   }
 
-  // Check if username is already used in profiles
-  const { data: existingProfile, error: usernameCheckError } = await supabase
-    .from('profiles')
-    .select('id')
-    .eq('username', username)
-    .single()
-
-  if (existingProfile) {
-    errors.username = 'This username is already in use.'
-  }
-
   if (errors.email || errors.password || errors.username || confirmedPasswordError) {
     return res.status(400).json({ errors })
   }
@@ -107,23 +97,31 @@ router.post('/', async (req, res) => {
   })
 
   if (error) {
-    return res.status(400).json({ error: error.message })
+    console.error(error)
+    errors.general = error.message
+    return res.status(400).json({ errors })
   }
 
   const user = data.user
 
   if (!user) {
-    res.status(400).json({ error: 'profile creation failed: user was null' })
-    return
+    console.error('profile creation failed: user was null')
+    errors.general = 'profile creation failed: user was null'
+    return res.status(400).json({ errors })
   }
 
-  // Insert a new profile based on user's ID
-  console.log('Attempting to insert new profile row')
-  const { error: profileError } = await supabase.from('profiles').insert([{ id: user.id, username }])
+  // New profile should be inserted by SQL trigger
+  // Update username of this new profile
+  const { error: profileError } = await supabase.from('profiles').update({ username }).eq('id', user.id)
 
+  // Rollback account creation if there was an account creation error to avoid hanging account data
   if (profileError) {
-    console.error(`Error inserting profile for user: ${user.id}, Message: ${profileError.message}`)
-    return res.status(500).json({ error: `Profile creation error: ${profileError.message}` })
+    console.error(`Error updating profile username: ${profileError.message}`)
+
+    await supabase.auth.admin.deleteUser(user.id)
+
+    errors.general = `Profile update failed, user creation rolled back.`
+    return res.status(500).json({ errors })
   }
 
   res.status(200).json({ message: 'User created successfully', isVerified: user.user_metadata.email_verified })

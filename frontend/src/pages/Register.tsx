@@ -37,16 +37,19 @@ export default function Register() {
       setIsRegistering(true)
       const errors = await signUp(email, password, username, confirmedPassword)
       setIsRegistering(false)
+
+      if (errors?.username) return setErrorMessageUsername(errors.username)
+      if (errors?.password) return setErrorMessagePassword(errors.password)
+      if (errors?.email) return setErrorMessageEmail(errors.email)
+      if (errors?.confirmedPassword) return setErrorMessageConfirmedPassword(errors.confirmedPassword)
+      if (errors?.general)
+        return setErrorMessageConfirmedPassword('Something went wrong, if the issue persists, please contact me')
+
       setIsAwaitingVerification(true)
       setSecondsLeft(60)
       setDisabled(true)
 
       localStorage.setItem('temp_email', email)
-
-      if (errors?.username) setErrorMessageUsername(errors.username)
-      if (errors?.password) setErrorMessagePassword(errors.password)
-      if (errors?.email) setErrorMessageEmail(errors.email)
-      if (errors?.confirmedPassword) setErrorMessageConfirmedPassword(errors.confirmedPassword)
     }
   }
 
